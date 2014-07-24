@@ -1,0 +1,27 @@
+{
+  "name": "timelapseServer",
+  "version": "0.0.1",
+  "description": "Web server for static files with API REST and WebSocket that is used to run a timelapse web service.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/felipehw/timelapseServer"
+  },
+  "keywords": [
+    "Web",
+    "server",
+    "time-lapse"
+  ],
+  "author": "felipehw",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/felipehw/timelapseServer/issues"
+  },
+  "dependencies": {
+    "hapi": "^6.2.1"
+  }
+}
