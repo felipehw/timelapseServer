@@ -1,5 +1,5 @@
 var Hapi = require('hapi');
-var server = new Hapi.Server(3000);
+var server = new Hapi.Server(3000, {cors : true});
 
 var getTimelapsesRoute = require('./routes/v1/get/timelapses.js');
 var getTimelapsesTimelapseRoute = require('./routes/v1/get/timelapses/timelapse.js');
