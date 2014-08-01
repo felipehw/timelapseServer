@@ -30,7 +30,7 @@
       frames: 2000,
     }
 
-- `GET /v1/timelapses/:id/photos`:
+- `GET /v1/timelapses/:id/photos?detailed=true`:
     {
        "id": "fpolis-20140601U123121",
        "name": "Florianópolis",
@@ -48,6 +48,24 @@
                "date": "2014-04-26T16:09:54.000Z",
                "frame": "000",
                //data: 'asdasd132qsad', //base64 //melhor usar o filename p/ compor path
+           },
+        ]
+    }
+
+- `GET /v1/timelapses/:id/photos?detailed=false`:
+    {
+       "id": "fpolis-20140601U123121",
+       "name": "Florianópolis",
+       "place": "Florianópolis",
+       "startTime": "20140601U123121",
+       "endTime": "20140601U123121",
+       "lapse": 10000,
+       "frames": 2000,
+       "photos":
+       [
+           {
+               "filename": "frame000.jpg",
+               "frame": "000",
            },
         ]
     }
