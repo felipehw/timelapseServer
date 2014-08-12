@@ -4,6 +4,7 @@ var server = new Hapi.Server(3000, {cors : true});
 var getTimelapsesRoute = require('./routes/v1/get/timelapses.js');
 var getTimelapsesTimelapseRoute = require('./routes/v1/get/timelapses/timelapse.js');
 var getTimelapsesTimelapsePhotosRoute = require('./routes/v1/get/timelapses/timelapse/photos.js');
+var dataMon = require('./data-mon.js');
 
 server.route(getTimelapsesRoute);
 server.route(getTimelapsesTimelapseRoute);
@@ -26,3 +27,5 @@ server.route({
 server.start(function () {
     console.log('Server running at:', server.info.uri);
 });
+
+dataMon();
