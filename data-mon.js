@@ -1,10 +1,12 @@
 // monitora criação de novos frames e envia p/ clientes websockets
 var async = require('async');
 var watch = require('watch');
+var SocketIO = require('socket.io');
+var EventEmitter = require("events").EventEmitter;
 
-var extractDataForFrame = function(pathPlusFilename) {
+var extractDataOfFrame = function(pathPlusFilename) {
   var frameStringMatch = pathPlusFilename.match(/^public\/data\/(\w+-\w+)\/frames\/(\w+\.jpg)$/),
-      dataForFrame = null;
+      dataOfFrame = null;
 
   if (frameStringMatch) {
     var id = frameStringMatch[1] ? frameStringMatch[1] : null,
@@ -12,7 +14,7 @@ var extractDataForFrame = function(pathPlusFilename) {
         frameNumberStringMatch = filename ? filename.match(/(\d+)/) : null,
         frame = frameNumberStringMatch ? frameNumberStringMatch[1] : null;
     if (frame !== null) {
-      dataForFrame = {
+      dataOfFrame = {
         "id": id,
         "photos": [
           { "filename": filename,
@@ -21,18 +23,40 @@ var extractDataForFrame = function(pathPlusFilename) {
       }
     }
   }
-  return dataForFrame;
+  return dataOfFrame;
 };
 
-module.exports = function dataMon(options){
+module.exports = function dataMon(listener, options){
+  var io = SocketIO.listen(listener);
+  var notifierNewFrame = new EventEmitter();
   var dir = 'public/data/';
+
+
+  io.sockets.on('connection', function (socket) {
+    var sendDataOfFrame = function(dataOfFrame) {
+      console.log('Send data\'s frame of timelapse "' + dataOfFrame.id + '" for client WebSocket: ' + socket.id);
+      socket.emit('frame', dataOfFrame);
+    };
+
+    console.log('Client has made a WebSocket connection: ' + socket.id);
+
+    notifierNewFrame.on('newFrame', sendDataOfFrame);
+
+    socket.on('disconnect', function() {
+      console.log('Client WebSocket has disconnected: ' + socket.id);
+      // need remove listener for don't try send to dead sockets
+      notifierNewFrame.removeListener('newFrame', sendDataOfFrame);
+    });
+  });
+
   watch.createMonitor(dir, function (monitor) {
     monitor.on("created", function (f, stat) {
       // Handle new files
       // f === 'public/data/fpolis-20140601U123121/frames/frame000.jpg'
-      var dataForFrame = extractDataForFrame(f);
-      if ( dataForFrame ) {
-        console.log(dataForFrame);
+      var dataOfFrame = extractDataOfFrame(f);
+      if ( dataOfFrame ) {
+        console.log('New frame detected of timelapse: ' + dataOfFrame.id);
+        notifierNewFrame.emit('newFrame', dataOfFrame);
       } else {
         console.log("Don't match the frame format: " + f);
       }
@@ -47,5 +71,5 @@ module.exports = function dataMon(options){
     */
     //monitor.stop(); // Stop watching
   })
-  console.log('Data monitoring Up');
+  console.log('Data Change Monitor (using WebSocket) Up');
 };

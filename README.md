@@ -2,7 +2,7 @@
 
 ## TODO
 
-- Envia JSON com as novas fotos em intervalos definidos
+- Envia JSON apenas em intervalos definidos?
 
 
 ## Comentários
@@ -71,7 +71,7 @@
 
 ## API WebSocket
 
-- Rascunho de atualização de arquivos:
+- event `frame` (`dataForFrame`):
     {
        "id": "fpolis-20140601U123121",
        "photos":
@@ -83,11 +83,10 @@
         ]
     }
 
-
-
 ## FEITO
 
 - OK: Varrer dir `/public/data/`, encontrar timelapses e alimentar 'GET /v1/timelapses' e 'GET /v1/timelapses/:id'.
 - OK: Varrer dir `/public/data/:id/frames` e alimentar 'GET /v1/timelapses/:id/photos'.
 - OK: Limpar código de arquivos modificados e commitar: "Implementado comportamento das rotas 'GET /v1/timelapses', 'GET /v1/timelapses/:id' e 'GET /v1/timelapses/:id/photos' (entregam JSON desejado)"
 - OK: Varre diretório a cada modificação no mesmo
+- OK: Envia JSON com dados de novas fotos
